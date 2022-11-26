@@ -1,18 +1,13 @@
 import sainte_lague from "../algorithm/sainte-lague";
-const voteresult = (
-  [
-      ['uml',1000],
-      ['np',2000],
-      ['cpn-maoist',300]
-  ])
-
-const seats=175;
+import {voteresult} from "../public/data";
+const seats=8;
 
 function HomePage() {
+
   const a=sainte_lague(voteresult,seats);
   console.log(a);
     return (<>
-      <div>Welcome to the site</div>
+      <div><h1>Proportional Representation Seat Allocation Simulation</h1></div>
       </>
     )
   }

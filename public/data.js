@@ -1,6 +1,7 @@
-const voteresult = (
-[
-    ['uml',1000],
-    ['np',2000],
-    ['cpn-maoist',300]
-])
+export const voteresult = (
+    [
+        ['A',100000],
+        ['B',80000],
+        ['C',30000],
+        ['D',20000]
+    ])
