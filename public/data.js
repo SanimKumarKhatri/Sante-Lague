@@ -1,7 +1,8 @@
 export const voteresult = (
     [
-        ['A',100000],
-        ['B',80000],
-        ['C',30000],
-        ['D',20000]
+        ['CPN-UML',3173494],
+        ['Nepali Congress',3128389],
+        ['CPN-Maoist',1303721],
+        ['Rastriya Janata Party',472254],
+        ['Federal Socialist Forum',470201]
     ])

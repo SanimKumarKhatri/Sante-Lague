@@ -1,6 +1,6 @@
 import sainte_lague from "../algorithm/sainte-lague";
 import {voteresult} from "../public/data";
-const seats=8;
+const seats=110;
 
 function HomePage() {
 
