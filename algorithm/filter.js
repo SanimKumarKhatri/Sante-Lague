@@ -7,6 +7,8 @@ export default function Filtering(x){
     for(var i=0;i<len;i++){
         s1+=x[i][1];
     }
+    console.log("sum votes:");
+    console.log(s1);
     for(var i=0;i<len;i++){
         if(x[i][1]/s1 >=0.03){
             temp.push(x[i]);

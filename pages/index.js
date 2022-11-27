@@ -1,17 +1,20 @@
 import sainte_lague from "../algorithm/sainte-lague";
 import Filtering from "../algorithm/filter";
-import {voteresult} from "../public/data";
+import {voteresult1} from "../public/data";
 const seats=110;
 
 function HomePage() {
   //to filter parties with more than 3% vote overall
-  const a=Filtering(voteresult);
+  const a=Filtering(voteresult1);
   //main formula
   const b=sainte_lague(a,seats);
   console.log(a);
   console.log(b);
     return (<>
       <div><h1>Proportional Representation Seat Allocation Simulation</h1></div>
+      <h2>Just look at the console man, nothing to see here for now</h2>
+      <h3>I will try to edit this</h3>
+      <h4>but god knows when...</h4>
       </>
     )
   }
