@@ -1,12 +1,12 @@
 import sainte_lague from "../algorithm/sainte-lague";
 import Filtering from "../algorithm/filter";
-import {voteresult1} from "../public/data";
-const seats=110;
+import {fsuvote} from "../public/data";
+const seats=9;
 
 function HomePage() {
   //to filter parties with more than 3% vote overall
-  const a=Filtering(voteresult1);
-  //main formula
+  const a=Filtering(fsuvote);
+  //main formu
   const b=sainte_lague(a,seats);
   console.log(a);
   console.log(b);

@@ -62,3 +62,15 @@ export const voteresult1 =(
     ['Rastriya Nagarik Party', 2150]
     ]
 )
+
+export const fsuvote=(
+    [
+        ['RAstriya Prajatantrik Bidhyarthi Union',169],
+        ['ANNFSU',306],
+        ['Nepal Krantikari Bidhyarthi',43],
+        ['janamat',224],
+        ['ANNFSU akhil',545],
+        ['akhil krantikari',513],
+        ['NSU',473]
+    ]
+)
