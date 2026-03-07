@@ -160,9 +160,10 @@ def scrape_election_data():
         driver.quit()
 
 if __name__ == "__main__":
-    while True:
-        print(f"--- Starting scrape at {time.ctime()} ---")
+    print(f"--- Starting scrape cycle at {time.ctime()} ---")
+    try:
         scrape_election_data()
         scrape_fptp_summary()
-        print("Waiting 2 minutes for next update...")
-        time.sleep(120)
+        print("Scrape cycle completed successfully.")
+    except Exception as e:
+        print(f"Scrape cycle failed: {e}")
