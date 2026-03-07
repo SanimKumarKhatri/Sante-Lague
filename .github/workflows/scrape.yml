@@ -1,7 +1,7 @@
 name: Update Election Data
 on:
   schedule:
-    - cron: '7,17,27,37,47,57 * * * *' # Runs every 10 minutes
+    - cron: '*/10 * * * *' # Runs every 10 minutes
   workflow_dispatch:      # Allows you to run it manually
 
 jobs:
@@ -24,8 +24,3 @@ jobs:
           git add public/*.json
           git commit -m "Auto-update: New Election Results" || exit 0
           git push
-
-      - name: Trigger Vercel Rebuild
-        if: success() # Only run if the scraper didn't crash
-        run: |
-          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
