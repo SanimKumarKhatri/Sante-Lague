@@ -1,5 +1,6 @@
 import json
 import time
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -70,7 +71,12 @@ def scrape_fptp_summary():
                 "Leading": leading_int
             })
 
-        with open("../../public/fptp_results.json", "w", encoding="utf-8") as f:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Navigate to the public folder (up two levels from pages/api)
+        output_path = os.path.join(script_dir, "../../public/fptp_results.json")
+        
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump(fptp_data, f, ensure_ascii=False, indent=4)
 
         print(f"Success! Scraped {len(fptp_data)} parties for FPTP.")
@@ -132,8 +138,13 @@ def scrape_election_data():
                 "Votes": vote_int
             })
 
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Navigate to the public folder (up two levels from pages/api)
+        output_path = os.path.join(script_dir, "../../public/live_election_results.json")
+
         # 5. Save to JSON
-        with open("../../public/live_election_results.json", "w", encoding="utf-8") as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump(extracted_data, f, ensure_ascii=False, indent=4)
 
         print(f"Success! Scraped {len(extracted_data)} parties to 'live_election_results.json'.")
