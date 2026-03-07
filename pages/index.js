@@ -40,13 +40,16 @@ function HomePage() {
   
   // Ensure prSeatsMap lookup is working
   const prWon = prSeatsMap[name] || 0;
+  const isIndependent = (name === "स्वतन्त्र");
+  const isNational = !isIndependent && fptpWon >= 1 && prWon >= 0;
 
   return {
     name,
     fptpWon, // This matches the variable defined above
     leading,
     prWon,
-    projected: fptpWon + prWon + leading
+    projected: fptpWon + prWon + leading,
+    isNational
   };
 });
 
@@ -92,7 +95,16 @@ function HomePage() {
           <tbody>
             {combinedData.map((party, index) => (
               <tr key={index} style={{ textAlign: 'center' }}>
-                <td style={{ textAlign: 'left', fontWeight: 'bold' }}>{party.name}{getMajorityBadge(party.projected)}</td>
+                <td style={{ textAlign: 'left', fontWeight: 'bold' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap'}}><span>{party.name}</span>
+                  {party.isNational && ( <span style={{ color: '#27ae60', 
+                                                        fontSize: '0.75em', 
+                                                        border: '1px solid #27ae60', 
+                                                        padding: '2px 6px', 
+                                                        borderRadius: '4px',
+                                                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                                                        whiteSpace: 'nowrap' }}>National Party</span>)}
+                {getMajorityBadge(party.projected)}</div></td>
                 <td style={{ fontSize: '1.2em', fontWeight: 'bold', color: '#32ae27' }}>{party.fptpWon}</td>
                 <td>{party.leading}</td>                
                 <td>{party.prWon}</td>
