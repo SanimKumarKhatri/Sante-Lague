@@ -42,7 +42,7 @@ def scrape_fptp_summary():
         # Usually, the summary is in a table with a specific ID or class
         print("Waiting for data to render...")
         wait = WebDriverWait(driver, 20)
-        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "table"))) 
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "result-label")))
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
         
