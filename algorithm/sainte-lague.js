@@ -1,5 +1,5 @@
 
-const c=1.4;
+const c=1;
 
 function sum(s){
     var sum=0;
@@ -9,6 +9,7 @@ function sum(s){
     }
     return sum;
 }
+
 function max(f){
     var max=-Infinity;
     let len=f.length;
@@ -19,10 +20,11 @@ function max(f){
     }
     return max;
 }
+
 function sainte_lague(x, seats){
     //main formula
     var v= new Array();
-    var t=new Array();
+    var t= new Array();
     var result=[];
     var s= new Array();
     let len = x.length;
@@ -33,11 +35,6 @@ function sainte_lague(x, seats){
     console.log(v);
     console.log(s);
     while(sum(s)<seats){
-        if(sum(s)==0){
-            for(var i=0; i<len;i++){
-                v[i]=t[i]/((2*s[i])+c);
-            }
-        }
         var m=max(v);
         for(var i=0;i<len;i++){
             if(v[i]==m){
@@ -45,8 +42,6 @@ function sainte_lague(x, seats){
                 v[i]=t[i]/((2*s[i])+c);
             }
         }
-        console.log(v);
-        console.log(s);
     }
 
     for(var i=0;i<len;i++){
