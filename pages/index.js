@@ -60,6 +60,16 @@ function HomePage() {
     loadData();
   }, []);
 
+  const getMajorityBadge = (projected) => {
+  if (projected >= 184) {
+    return <span style={{ marginLeft: '10px', fontSize: '0.8em', padding: '2px 6px', backgroundColor: '#e74c3c', color: 'white', borderRadius: '4px' }}>2/3 Majority</span>;
+  }
+  if (projected >= 138) {
+    return <span style={{ marginLeft: '10px', fontSize: '0.8em', padding: '2px 6px', backgroundColor: '#3498db', color: 'white', borderRadius: '4px' }}>Majority</span>;
+  }
+  return null;
+};
+
   if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}><h2>Loading Live Election Data...</h2></div>;
 
   return (
@@ -82,7 +92,7 @@ function HomePage() {
           <tbody>
             {combinedData.map((party, index) => (
               <tr key={index} style={{ textAlign: 'center' }}>
-                <td style={{ textAlign: 'left', fontWeight: 'bold' }}>{party.name}</td>
+                <td style={{ textAlign: 'left', fontWeight: 'bold' }}>{party.name}{getMajorityBadge(party.projected)}</td>
                 <td style={{ fontSize: '1.2em', fontWeight: 'bold', color: '#32ae27' }}>{party.fptpWon}</td>
                 <td>{party.leading}</td>                
                 <td>{party.prWon}</td>
