@@ -1,22 +1,160 @@
+import { useState, useEffect } from 'react';
 import sainte_lague from "../algorithm/sainte-lague";
 import Filtering from "../algorithm/filter";
-import {fsuvote} from "../public/data";
-const seats=9;
+import { getLiveElectionData } from "../public/data";
+
+const seats=110;
 
 function HomePage() {
-  //to filter parties with more than 3% vote overall
-  const a=Filtering(fsuvote);
-  //main formu
-  const b=sainte_lague(a,seats);
-  console.log(a);
-  console.log(b);
-    return (<>
-      <div><h1>Proportional Representation Seat Allocation Simulation</h1></div>
-      <h2>Just look at the console man, nothing to see here for now</h2>
-      <h3>I will try to edit this</h3>
-      <h4>but god knows when...</h4>
-      </>
-    )
-  }
+  const [partyData, setPartyData] = useState([]);
+  const [allocatedSeats, setAllocatedSeats] = useState([]);
+  const [combinedData, setCombinedData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      // 1. Fetch the data from your JSON/API
+      const pr_votes = await getLiveElectionData();
+
+      // 2. Get FPTP Data (Won/Leading)
+      const fptpRes = await fetch('/fptp_results.json');
+      const fptpData = await fptpRes.json();
+      
+      if (pr_votes && pr_votes.length > 0) {
+        // 2. Apply your 3% Threshold Filter
+        // Note: Assuming Filtering expects the 2D array [["Party", votes], ...]
+        const qualifiedParties = Filtering(pr_votes); 
+        console.log("qualified",qualifiedParties);
+        // 3. Run Sainte-Laguë Algorithm
+        const prSeatsArray = sainte_lague(qualifiedParties, seats);
+        const prSeatsMap = Object.fromEntries(
+            prSeatsArray.map(item => [item[0], item[2]]) // Mapping Party Name to Seats Won
+          );
+
+        const finalTable = fptpData.map(party => {
+  const name = party.Party;
+  
+  // Use 'fptpWon' here so it matches the return object below
+  const fptpWon = party.Won || 0; 
+  const leading = party.Leading || 0;
+  
+  // Ensure prSeatsMap lookup is working
+  const prWon = prSeatsMap[name] || 0;
+
+  return {
+    name,
+    fptpWon, // This matches the variable defined above
+    leading,
+    prWon,
+    projected: fptpWon + prWon + leading
+  };
+});
+
+        setPartyData(pr_votes);
+        setAllocatedSeats(prSeatsArray);
+        setCombinedData(finalTable.sort((a, b) => b.projected - a.projected));
+      }
+      setLoading(false);
+    }
+
+    loadData();
+  }, []);
+
+  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}><h2>Loading Live Election Data...</h2></div>;
+
+  return (
+    <div style={{ padding: '30px', fontFamily: 'system-ui, sans-serif', backgroundColor: '#f9f9f9' }}>
+      <h1 style={{ textAlign: 'center', color: '#2c3e50' }}>House of Representatives Seat Projection</h1>
+      
+      {/* Summary Table: Combined FPTP + PR */}
+      <section style={{ marginBottom: '50px' }}>
+        <h2 style={{ borderBottom: '2px solid #3498db', paddingBottom: '10px' }}>Final Projected Standings (275 Total)</h2>
+        <table border="1" cellPadding="12" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+          <thead style={{ backgroundColor: '#34495e', color: 'white' }}>
+            <tr>
+              <th>Political Party</th>
+              <th style={{ backgroundColor: '#32ae27' }}>FPTP Won</th>
+              <th >FPTP Leading</th>
+              <th>PR Projected</th>
+              <th style={{ backgroundColor: '#aea027' }}>Projected Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {combinedData.map((party, index) => (
+              <tr key={index} style={{ textAlign: 'center' }}>
+                <td style={{ textAlign: 'left', fontWeight: 'bold' }}>{party.name}</td>
+                <td style={{ fontSize: '1.2em', fontWeight: 'bold', color: '#32ae27' }}>{party.fptpWon}</td>
+                <td>{party.leading}</td>                
+                <td>{party.prWon}</td>
+                <td style={{ fontSize: '1.2em', fontWeight: 'bold', color: '#aea027' }}>{party.projected}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+        {/* Table: PR Seats Breakdown */}
+        <section style={{ flex: 1, minWidth: '400px' }}>
+          <h3>PR Projected (Sainte-Laguë)</h3>
+          <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#f0f9ff' }}>
+            <thead>
+              <tr>
+                <th>Party</th>
+                <th>Seats</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allocatedSeats.map((item, index) => (
+                <tr key={index}>
+                  <td>{item[0]}</td>
+                  <td style={{ fontWeight: 'bold', textAlign: 'center' }}>{item[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        {/* Table: Live PR Votes */}
+        <section style={{ flex: 1, minWidth: '300px' }}>
+          <h3>Current PR Vote Tally</h3>
+          <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
+            <thead>
+              <tr>
+                <th>Party</th>
+                <th>Votes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {partyData.slice(0, 10).map((item, index) => ( // Only showing top 10 for clarity
+                <tr key={index}>
+                  <td>{item[0]}</td>
+                  <td>{item[1].toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p><i>Showing top 10 parties by vote count...</i></p>
+        </section>
+      </div>
+    </div>
+  );
+}
+  // //to filter parties with more than 3% vote overall
+  // var demo = getLiveElectionData;
+  // console.log(demo);
+  // // const a=Filtering(fsuvote);
+  // // //main formu
+  // // const b=sainte_lague(a,seats);
+  // // console.log(a);
+  // // console.log(b);
+  //   return (<>
+  //     <div><h1>Proportional Representation Seat Allocation Simulation</h1></div>
+  //     <h2>Just look at the console man, nothing to see here for now</h2>
+  //     <h3>I will try to edit this</h3>
+  //     <h4>but god knows when...</h4>
+  //     </>
+  //   )
+  // }
   
   export default HomePage

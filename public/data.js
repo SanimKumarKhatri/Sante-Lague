@@ -1,3 +1,18 @@
+export async function getLiveElectionData() {
+    try {
+        // Since it's in the public folder, you can fetch it by its name
+        const res = await fetch('live_election_results.json');
+        const jsonData = await res.json();
+        console.log("Error loaded JSON");
+        // Convert the JSON into your required 2D array [Party, Votes]
+        return jsonData.map(item => [item.Party, item.Votes]);
+        
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+        return []; 
+    }
+}
+
 export const voteresult = (
     [
         ['CPN-UML',3173494],
