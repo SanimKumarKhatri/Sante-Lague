@@ -24,3 +24,8 @@ jobs:
           git add public/*.json
           git commit -m "Auto-update: New Election Results" || exit 0
           git push
+
+      - name: Trigger Vercel Rebuild
+        if: success() # Only run if the scraper didn't crash
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
