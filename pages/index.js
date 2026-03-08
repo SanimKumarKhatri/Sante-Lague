@@ -45,7 +45,7 @@ function HomePage() {
   // Ensure prSeatsMap lookup is working
   const prWon = prSeatsMap[name] || 0;
   const isIndependent = (name === "स्वतन्त्र");
-  const isNational = !isIndependent && fptpWon >= 1 && prWon >= 0;
+  const isNational = !isIndependent && fptpWon >= 1 && prWon >= 1;
   const metThreshold = (prWon > 0);
 
   return {
