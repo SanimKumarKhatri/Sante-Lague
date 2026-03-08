@@ -10,6 +10,8 @@ function HomePage() {
   const [allocatedSeats, setAllocatedSeats] = useState([]);
   const [combinedData, setCombinedData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalVotes, setTotalVotes] = useState(0);
+  const [threshold, setThreshold] = useState(0);
 
   useEffect(() => {
     async function loadData() {
@@ -23,6 +25,8 @@ function HomePage() {
       if (pr_votes && pr_votes.length > 0) {
         // 2. Apply your 3% Threshold Filter
         // Note: Assuming Filtering expects the 2D array [["Party", votes], ...]
+        const totalVotes = pr_votes.reduce((sum, party) => sum + party[1], 0);
+        const threshold = Math.ceil(totalVotes * 0.03);
         const qualifiedParties = Filtering(pr_votes); 
         console.log("qualified",qualifiedParties);
         // 3. Run Sainte-Laguë Algorithm
@@ -42,6 +46,7 @@ function HomePage() {
   const prWon = prSeatsMap[name] || 0;
   const isIndependent = (name === "स्वतन्त्र");
   const isNational = !isIndependent && fptpWon >= 1 && prWon >= 0;
+  const metThreshold = (prWon > 0);
 
   return {
     name,
@@ -49,10 +54,12 @@ function HomePage() {
     leading,
     prWon,
     projected: fptpWon + prWon + leading,
-    isNational
+    isNational,
+    metThreshold
   };
 });
-
+        setTotalVotes(totalVotes);
+        setThreshold(threshold);
         setPartyData(pr_votes);
         setAllocatedSeats(prSeatsArray);
         setCombinedData(finalTable.sort((a, b) => b.projected - a.projected));
@@ -139,7 +146,15 @@ function HomePage() {
 
         {/* Table: Live PR Votes */}
         <section style={{ flex: 1, minWidth: '300px' }}>
-          <h3>Current PR Vote Tally</h3>
+          <div style={{ marginBottom: '10px' }}>
+          <h3 style={{ margin: 0 }}>Current PR Vote Tally</h3>
+          
+          {/* Simple Text Variable Display */}
+          <p style={{ fontSize: '0.9rem', color: '#555', marginTop: '5px' }}>
+            Total PR Votes: <strong>{totalVotes.toLocaleString()}</strong> | 
+            3% Threshold: <span style={{ color: '#e67e22', fontWeight: 'bold' }}>{threshold.toLocaleString()}</span>
+          </p>
+        </div>
           <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
             <thead>
               <tr>
@@ -162,21 +177,5 @@ function HomePage() {
     </div>
   );
 }
-  // //to filter parties with more than 3% vote overall
-  // var demo = getLiveElectionData;
-  // console.log(demo);
-  // // const a=Filtering(fsuvote);
-  // // //main formu
-  // // const b=sainte_lague(a,seats);
-  // // console.log(a);
-  // // console.log(b);
-  //   return (<>
-  //     <div><h1>Proportional Representation Seat Allocation Simulation</h1></div>
-  //     <h2>Just look at the console man, nothing to see here for now</h2>
-  //     <h3>I will try to edit this</h3>
-  //     <h4>but god knows when...</h4>
-  //     </>
-  //   )
-  // }
   
   export default HomePage
