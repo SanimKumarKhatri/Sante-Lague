@@ -1,26 +1,26 @@
-name: Update Election Data
-on:
-  schedule:
-    - cron: '*/10 * * * *' # Runs every 10 minutes
-  workflow_dispatch:      # Allows you to run it manually
+# name: Update Election Data
+# on:
+#   schedule:
+#     - cron: '*/10 * * * *' # Runs every 10 minutes
+#   workflow_dispatch:      # Allows you to run it manually
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        run: pip install selenium webdriver-manager beautifulsoup4
-      - name: Run Scraper
-        run: python pages/api/webscrap.py
-      - name: Commit and Push changes
-        run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
-          git add public/*.json
-          git commit -m "Auto-update: New Election Results" || exit 0
-          git push
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.9'
+#       - name: Install dependencies
+#         run: pip install selenium webdriver-manager beautifulsoup4
+#       - name: Run Scraper
+#         run: python pages/api/webscrap.py
+#       - name: Commit and Push changes
+#         run: |
+#           git config --global user.name "GitHub Action"
+#           git config --global user.email "action@github.com"
+#           git add public/*.json
+#           git commit -m "Auto-update: New Election Results" || exit 0
+#           git push
